@@ -10,6 +10,7 @@
     "no-plusplus": "off",
     "no-underscore-dangle": "off",
     "no-param-reassign": "off",
-    "array-callback-return": "off"
+    "array-callback-return": "off",
+    "import/prefer-default-export": "off"
   }
 }

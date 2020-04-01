@@ -1,4 +1,6 @@
-import { List, prompt, Select } from 'enquirer';
+import {
+  List, prompt, Select, BooleanPrompt,
+} from 'enquirer';
 import chalk from 'chalk';
 import * as git from './git';
 
@@ -79,7 +81,7 @@ const mobBranch = async (currentMobBranch) => {
     type: 'input',
     name: 'branchName',
     message: 'Type a branch to use for mobbing wip commits',
-    initial: currentMobBranch,
+    initial: currentMobBranch || 'mob-wip-branch',
     validate: (value) => {
       if (value === 'master') {
         return chalk.red('Cannot mob on master branch');
@@ -105,6 +107,13 @@ const menu = async (choices) => {
   return answer.option;
 };
 
+const yn = (message) => {
+  const p = new BooleanPrompt({
+    message,
+  });
+  return p.run();
+};
+
 const any = async () => {
   await prompt({
     type: 'input',
@@ -115,6 +124,7 @@ const any = async () => {
 
 export default {
   any,
+  yn,
   menu,
   postStartOptions,
   mobBranch,

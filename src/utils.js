@@ -1,17 +1,9 @@
 import chalk from 'chalk';
 import figlet from 'figlet';
+import ora from 'ora';
 import prompt from './prompt';
 import mobConfig from './mobConfig';
-
-export const shuffle = (a) => {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    // eslint-disable-next-line no-param-reassign
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-};
-
+import * as git from './git';
 
 export const message = (defaultMessage, info, time) => {
   if (time) {
@@ -39,7 +31,17 @@ export const showError = async (error) => {
   await prompt.any();
 };
 
-export const showInfo = (projectName, config, mobitConfig, currentUser) => {
+export const updateMobConfig = async conf => {
+  const currentConfig = mobConfig.get();
+  if (JSON.stringify(conf) !== JSON.stringify(currentConfig)) {
+    const spinner = ora('Pushing mobit config file').start();
+    mobConfig.set(conf);
+    await git.commitAndPush('Updated mob config', ['./.mobit.json']);
+    spinner.succeed('Pushing config file');
+  }
+};
+
+export const showInfo = (projectName, config, mobitConfig) => {
   const branchName = config.get('branchName');
   console.log(
     chalk.yellow(figlet.textSync('Mobit', { horizontalLayout: 'full' })),
@@ -49,26 +51,18 @@ export const showInfo = (projectName, config, mobitConfig, currentUser) => {
     chalk.green(`Mobbing branch: ${branchName || 'Not set'}`),
   );
   if (mobitConfig) {
-    const members = mobitConfig.members.map((m) => {
-      let member;
-      if (m === currentUser) {
-        member = `-${m} - you`;
-      } else {
-        member = `-${m}`;
-      }
-      return member === mobitConfig.current
-        ? chalk.white.bold(`${member} - current`)
-        : chalk.white(member);
-    });
+    const members = mobitConfig.members.map((member) => (member === mobitConfig.current
+      ? chalk.white.bold(`-${member} - driver`)
+      : chalk.white(`-${member}`)));
     console.log(
       chalk.green.bold(
         `Currently ${members.length === 2 ? 'pairing' : 'mobbing'} with:`,
       ),
     );
     console.log(`${members.join('\n')}`);
-    console.log(chalk.green.bold(`Duration is ${mobitConfig.duration}`));
+    console.log(chalk.green(`Duration is ${mobitConfig.duration}`));
     console.log(
-      chalk.green.bold(
+      chalk.green(
         `Break after ${mobitConfig.duration} rotations for ${mobitConfig.breakDuration} minutes`,
       ),
     );
