@@ -1,6 +1,6 @@
 
 
-<img src="mobit-alt.png" alt="mobit" width="150" align="right" style="margin-bottom:50px;" />
+<img src="mobit-alt.png" alt="mobit" width="150" align="right" />
 
 <br/><br/><br/>
 
@@ -12,8 +12,9 @@
 An interactive cli tool build in node to help the git handover when mobbing remotely. 
 
 The app listens for changes in config that will determine who is driving or navigating, and terminal will update when chages are detected.
-
-
+<p align="center">
+    <img src="mobit.gif" alt="mobit" width="80%" align="center"/>
+</p>
 
 ## Still to do 
 - Impliment mob completion - squash commits onto main branch and delete mob config
