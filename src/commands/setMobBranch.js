@@ -1,17 +1,23 @@
 import ora from 'ora';
-import Conf from 'conf';
-import path from 'path';
+import chalk from 'chalk';
 import * as git from '../git';
 import prompt from '../prompt';
-import { showError } from '../utils';
+import { showError, getLocalConfig } from '../utils';
 
 
 const setMobBranch = async (userSpecifiedBranch) => {
-  const config = new Conf({ projectName: path.basename(process.cwd()) });
+  const config = getLocalConfig();
   const branchName = userSpecifiedBranch || await prompt.mobBranch(config.get('branchName'));
+  if (branchName === 'master') {
+    console.log(chalk.red('Cannot use master branch'));
+    process.exit(1);
+  }
   const currentBranch = await git.currentBranch();
   const spinner = ora(`Setting up branch: ${branchName}`).start();
-
+  if (await git.hasChanges()) {
+    console.log(chalk.red('Cannot setup new branch as you have changes on your current branch'));
+    console.log(chalk.red('Please stash or commit and retry command'));
+  }
   try {
     await git.pullAndFetch();
     const branchExists = await git.getBranchExistsStatus(branchName);

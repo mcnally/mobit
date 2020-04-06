@@ -7,7 +7,7 @@ import mobConfig from '../mobConfig';
 import prompt from '../prompt';
 import finish from './finish';
 import {
-  message, mobbingInfo,
+  message, mobbingInfo, commandPreRequisites,
 } from '../utils';
 
 export const setTimerInterval = (time, callBack, onEndCallBack) => {
@@ -45,13 +45,12 @@ const setDrivingInterval = (duration, spinner, mobitConfig, currentUser, callbac
 
 // eslint-disable-next-line no-async-promise-executor
 const start = (commandSpecifiedDuration) => new Promise(async (resolve) => {
+  await commandPreRequisites();
   let timerInterval;
   let mainInterval;
   const spinner = ora('Setting up').start();
   let isDriving;
   let mobitConfig;
-
-  //   console.log(duration); process.exit(1);
   const currentGitUser = await git.getUserName();
   const leaveStart = () => {
     spinner.succeed();

@@ -1,5 +1,5 @@
 import ora from 'ora';
-import { updateMobConfig } from '../utils';
+import { updateMobConfig, commandPreRequisites } from '../utils';
 import mobConfig from '../mobConfig';
 
 const shuffle = (a) => {
@@ -12,6 +12,7 @@ const shuffle = (a) => {
 };
 
 const shuffleMob = async () => {
+  await commandPreRequisites();
   const spinner = ora('Shuffling mob');
   let conf = mobConfig.get();
   const { members } = conf;

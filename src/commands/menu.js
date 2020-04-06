@@ -13,18 +13,19 @@ import start from './start';
 import next from './next';
 
 import {
-  showInfo,
+  showInfo, updateMobConfig,
 } from '../utils';
 
 const menu = async () => {
   // Are we in a repo ?
   if (!(await git.checkIsRepo())) {
-    process.exit(1);
+    return;
   }
 
   const config = new Conf({ projectName: path.basename(process.cwd()) });
   const { projectName } = config._options;
   const mobbingBranch = config.get('branchName');
+  const currentBranch = await git.currentBranch();
   let currentOption = '';
 
   if (!mobbingBranch) {
@@ -32,12 +33,14 @@ const menu = async () => {
     await setMobBranch();
   }
 
-  // @todo Check if there are uncommitted changes
+  // Check if there are uncommitted changes in none mobbing branch
+  if (currentBranch !== mobbingBranch && await git.hasChanges()) {
+    console.log(chalk.red(`You have changes in the current branch, please stash or commit (or use ${chalk.bold('mob next')}) `));
+    process.exit(1);
+  }
 
   // Move to mobbing branch and pull
   await git.checkout(mobbingBranch);
-  // @todo Check if there are uncommitted changes
-
   await git.pullAndFetch();
   const mobConfigPresent = mobConfig.has();
 
@@ -48,14 +51,16 @@ const menu = async () => {
 
   let mobitConfig = mobConfig.get();
 
-  // If current users name isnt in the list, add it
   const currentUser = await git.getUserName();
   if (!currentUser) {
     throw new Error('Please set a git user name');
   }
 
-
-  // @todo check if user is in the config, if not add them !
+  // If user is not in the config, add them
+  if (!mobitConfig.members.includes(currentUser)) {
+    mobitConfig.members.push(currentUser);
+    await updateMobConfig(mobitConfig);
+  }
 
   clear();
   showInfo(projectName, config, mobitConfig);

@@ -1,9 +1,50 @@
 import chalk from 'chalk';
+import Conf from 'conf';
+import path from 'path';
 import figlet from 'figlet';
 import ora from 'ora';
 import prompt from './prompt';
 import mobConfig from './mobConfig';
 import * as git from './git';
+
+export const getLocalConfig = () => new Conf({ projectName: path.basename(process.cwd()) });
+
+export const commandPreRequisites = async () => {
+  const errors = [];
+  const config = getLocalConfig();
+  const currentBranch = await git.currentBranch();
+  const currentUser = await git.getUserName();
+  const mobBranch = await config.get('branchName');
+  if (!(await git.checkIsRepo())) {
+    errors.push('Directory does not have git');
+  } else {
+    if (currentBranch === 'master') {
+      errors.push('Cannot run command on master branch');
+    }
+    if (!mobBranch) {
+      errors.push('No mobbing branch set');
+    } else if (currentBranch !== mobBranch) {
+      errors.push('You are not on the mobbing branch');
+    } else if (currentBranch === mobBranch) {
+      if (!mobConfig.has()) {
+        errors.push('No mob config present in branch');
+      } else {
+        const mobitConfig = await mobConfig.get();
+        if (!mobitConfig.members.includes(currentUser)) {
+          errors.push('You are not in this mob');
+        }
+      }
+    }
+  }
+  if (errors.length > 0) {
+    console.log(chalk.yellow('Please correct the folllowing errrors before using this command'));
+    errors.map((error, index) => {
+      console.log(chalk.red(`${index + 1}: ${error}`));
+    });
+    process.exit(1);
+  }
+};
+
 
 export const message = (defaultMessage, info, time) => {
   if (time) {
@@ -43,6 +84,7 @@ export const updateMobConfig = async conf => {
 
 export const showInfo = (projectName, config, mobitConfig) => {
   const branchName = config.get('branchName');
+  console.log();
   console.log(
     chalk.yellow(figlet.textSync('Mobit', { horizontalLayout: 'full' })),
   );

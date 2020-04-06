@@ -2,9 +2,12 @@ import ora from 'ora';
 import mobConfig from '../mobConfig';
 import prompt from '../prompt';
 import * as git from '../git';
+import { commandPreRequisites, updateMobConfig } from '../utils';
+
 
 const next = async (specifiedNextUser) => {
   // @todo check if there is anything to commit
+  await commandPreRequisites();
   const spinner = ora();
   const mobitConfig = mobConfig.get();
   const currentGitUser = await git.getUserName();
@@ -25,12 +28,15 @@ const next = async (specifiedNextUser) => {
     }
     nextUser = specifiedNextUser;
   }
-  spinner.start(`Running handover to ${nextUser}`);
-  // update next person
-  mobConfig.set({ ...mobitConfig, current: nextUser });
-  // Commit and push
-  await git.commitAndPush('WIP commit');
-  spinner.succeed();
+
+  if (await git.hasChanges()) {
+    spinner.start(`Running handover to ${nextUser}`);
+    mobConfig.set({ ...mobitConfig, current: nextUser });
+    await git.commitAndPush('WIP commit');
+    spinner.succeed();
+  } else {
+    await updateMobConfig({ ...mobitConfig, current: nextUser });
+  }
 };
 
 export default next;

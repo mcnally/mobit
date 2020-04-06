@@ -2,6 +2,7 @@ import mobConfig from '../mobConfig';
 import * as git from '../git';
 import next from './next';
 
+jest.mock('../utils.js', () => ({ ...jest.requireActual('../utils.js'), commandPreRequisites: jest.fn() }));
 jest.mock('../mobConfig.js');
 jest.mock('../git.js');
 describe('next command', () => {
@@ -15,9 +16,9 @@ describe('next command', () => {
     };
     const expected = { ...before, current: 'one' };
     mobConfig.get.mockReturnValue(before);
-    // git.getUserName.mockReturnValue('agituser');
     mobConfig.getNextUser.mockReturnValue('one');
     await next();
     expect(mobConfig.set).toHaveBeenCalledWith(expected);
+    expect(git.commitAndPush).toHaveBeenCalledWith('Updated mob config', ['./.mobit.json']);
   });
 });

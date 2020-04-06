@@ -2,9 +2,11 @@ import chalk from 'chalk';
 import prompt from '../prompt';
 import mobConfig from '../mobConfig';
 import * as git from '../git';
-import { updateMobConfig } from '../utils';
+import { updateMobConfig, commandPreRequisites } from '../utils';
 
 const setConfig = async () => {
+  // @todo move to branch if no changes
+  await commandPreRequisites();
   const currentBranch = await git.currentBranch();
   if (currentBranch === 'master') {
     console.log(

@@ -51,6 +51,10 @@ export const createNewBranchFromMaster = async (branchName) => {
   await git().checkout(['-b', branchName]);
   await git().push(['--set-upstream', 'origin', branchName]);
 };
+export const hasChanges = async () => {
+  const stat = await git().status();
+  return stat.files.length > 0;
+};
 
 export const removeLocalAndCreatNew = async (branchName) => {
   await git().branch(['-D', branchName]);

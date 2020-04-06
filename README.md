@@ -11,20 +11,7 @@
 ## What is it 
 An interactive cli tool build in node to help the git handover when mobbing remotely. 
 
-The app listens for changes in config that will determine who is driving or navigating, and terminal will update when chages are detected.
-<p align="center">
-    <img src="mobit.gif" alt="mobit" width="80%" align="center"/>
-</p>
-
-## Still to do 
-- Impliment mob completion - squash commits onto main branch and delete mob config
-- Impliment break functionality - would be good to broadcast to everyone that the break is happening and anyone can stop it
-- Fix all @todos
-- Add custom base branch and commit message to config
-- Make debug and silent modes and create commands for each task
-- Refactor and fix test coverage 
-- More testing on all scenarios
-- Add auto publishing with symantic versioning
+The app listens for changes in config that will determine who is driving or navigating, and the terminal will update when chages are detected.
 
 ## Installation
 `npm install -g mobit`
@@ -32,6 +19,33 @@ The app listens for changes in config that will determine who is driving or navi
 `yarn global add mobit`
 
 Alternatively clone the repo and `yarn link`
+
+## Commands
+
+`mobit` Runs the main menu
+
+*Note that you can also do the following commands by using the menu
+
+`mobit start [minutes]` Starts the app (with optional minutes to override the config). User will start as either navigator or driver depending on the config.
+
+`mobit shuffle` Shuffle the mob and update the config.
+
+`mobit setbranch [branchname]` Sets the mobbing branch (stored locally).
+
+`mobit config` Prompts to update the main config (mob members, duration, current driver etc.).
+
+`mobit next [user]` Hands over to the next user (pass a git username to pass directly to that user)
+
+`mobit finish` Finish the mob session
+
+## Still to do 
+- Impliment mob completion - squash commits onto main branch and delete mob config
+- Impliment break functionality
+- Fix all @todos
+- Add custom base branch and commit message to config
+- Refactor and fix test coverage 
+- More testing on all scenarios
+- Add auto publishing with symantic versioning
 
 ## How it works
 When you run the tool it will ask for information about the mob session (if not already provided). When you start mobbing you will be either in a driver or navigator mode. Note that you will need to keep the cli running to receive updates.
