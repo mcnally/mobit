@@ -2,6 +2,7 @@
   "name": "mobit",
   "version": "0.1.3",
   "description": "A remote mobbing utility",
+  "keywords": ["Mobbing", "mob", "Remote Mobbing","Mob programming","Remote mob programming","node cli", "git"],
   "repository": {
     "type": "git",
     "url": "https://github.com/mcnally/mobit.git"
@@ -15,7 +16,7 @@
   "bin": {
     "mobit": "bin/mobit"
   },
-  "author": "",
+  "author": "Chris McNally",
   "license": "ISC",
   "dependencies": {
     "chalk": "^3.0.0",
@@ -30,7 +31,8 @@
     "keypress": "^0.2.1",
     "node-notifier": "^6.0.0",
     "ora": "^4.0.3",
-    "simple-git": "^1.132.0"
+    "simple-git": "^1.132.0",
+    "update-notifier": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

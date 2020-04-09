@@ -7,7 +7,7 @@ import * as git from './git';
 const mobConfig = async (currentMobConfig) => {
   const memberPrompt = new List({
     name: 'keywords',
-    message: 'Enter git usernames for members of the mob',
+    message: 'Enter git usernames for members of the mob (yours will be added automatically',
     initial: currentMobConfig.members,
   });
 

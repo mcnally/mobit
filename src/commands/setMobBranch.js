@@ -17,9 +17,10 @@ const setMobBranch = async (userSpecifiedBranch) => {
   if (await git.hasChanges()) {
     console.log(chalk.red('Cannot setup new branch as you have changes on your current branch'));
     console.log(chalk.red('Please stash or commit and retry command'));
+    process.exit(1);
   }
   try {
-    await git.pullAndFetch();
+    await git.fetch();
     const branchExists = await git.getBranchExistsStatus(branchName);
     if (branchExists.local && branchExists.remote) {
       spinner.succeed('Branch is available locally and on the remote');
@@ -43,9 +44,11 @@ const setMobBranch = async (userSpecifiedBranch) => {
       spinner.succeed();
     }
     config.set('branchName', branchName);
+    return branchName;
   } catch (e) {
     await showError(e);
   }
+  return undefined;
 };
 
 export default setMobBranch;

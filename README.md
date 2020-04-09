@@ -6,12 +6,12 @@
 
 
 # Mobit (Alpha)
-**Note that this is an early release and is incompete and prone to bugs. Please create an issue for any problems you encounter**
+**Note that this is an early release and is incomplete and prone to bugs. Please create an issue for any problems you encounter**
 
 ## What is it 
 An interactive cli tool build in node to help the git handover when mobbing remotely. 
 
-The app listens for changes in config that will determine who is driving or navigating, and the terminal will update when chages are detected.
+The app listens for changes in config that will determine who is driving or navigating, and the terminal will update when changes are detected.
 
 ## Installation
 `npm install -g mobit`
@@ -39,13 +39,13 @@ Alternatively clone the repo and `yarn link`
 `mobit finish` Finish the mob session
 
 ## Still to do 
-- Impliment mob completion - squash commits onto main branch and delete mob config
-- Impliment break functionality
-- Fix all @todos
+- Implement break functionality
+- Fix all @todo's
 - Add custom base branch and commit message to config
 - Refactor and fix test coverage 
 - More testing on all scenarios
-- Add auto publishing with symantic versioning
+- Add zoom integration
+- Add auto publishing with semantic versioning
 
 ## How it works
 When you run the tool it will ask for information about the mob session (if not already provided). When you start mobbing you will be either in a driver or navigator mode. Note that you will need to keep the cli running to receive updates.
@@ -53,8 +53,8 @@ When you run the tool it will ask for information about the mob session (if not 
 ### Driving
 Timer begins, once the timer is up you have the following options
 - Handover: Pass to the next person, all work is committed and pushed to the wip branch (with --no-verify).
-- Finish: Complete the mob, squash wip commits and atage changes on the main branch
-- Break: todo all mob members will be have a countdown untill the break ends
+- Finish: Complete the mob, squash wip commits and stage changes on the main branch
+- Break: todo all mob members will be have a countdown until the break ends
 - Exit: Do nothing and exit to main menu
 
 ### Navigating

@@ -9,6 +9,7 @@ import mobConfig from '../mobConfig';
 import setConfig from './setConfig';
 import setMobBranch from './setMobBranch';
 import shuffleMob from './shuffleMob';
+import done from './done';
 import start from './start';
 import next from './next';
 
@@ -24,14 +25,26 @@ const menu = async () => {
 
   const config = new Conf({ projectName: path.basename(process.cwd()) });
   const { projectName } = config._options;
-  const mobbingBranch = config.get('branchName');
+  let mobbingBranch = config.get('branchName');
   const currentBranch = await git.currentBranch();
   let currentOption = '';
 
   if (!mobbingBranch) {
     // prompt to create
-    await setMobBranch();
+    mobbingBranch = await setMobBranch();
   }
+
+  await git.fetch();
+  const branchExists = await git.getBranchExistsStatus(mobbingBranch);
+
+  if (branchExists.remote === false) {
+    // If theres no remote branch the mob session has probably finished
+    console.log(chalk.yellow('Mobbing has finished on this branch, resetting your local mob branch name'));
+    console.log(chalk.yellow('Please rerun this command to start again'));
+    config.delete('branchName');
+    process.exit(0);
+  }
+
 
   // Check if there are uncommitted changes in none mobbing branch
   if (currentBranch !== mobbingBranch && await git.hasChanges()) {
@@ -82,7 +95,7 @@ const menu = async () => {
         disabled: mobitConfig === undefined || !isDriving ? '(disabled - You are not driving)' : undefined,
       },
       {
-        name: 'finish',
+        name: 'done',
         message: 'Complete mobbing on this branch',
         disabled: mobitConfig === undefined,
       },
@@ -118,6 +131,9 @@ const menu = async () => {
         break;
       case 'shuffleMob':
         await shuffleMob();
+        break;
+      case 'done':
+        await done();
         break;
       default:
         break;

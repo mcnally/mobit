@@ -5,7 +5,7 @@ import clear from 'clear';
 import * as git from '../git';
 import mobConfig from '../mobConfig';
 import prompt from '../prompt';
-import finish from './finish';
+import done from './done';
 import {
   message, mobbingInfo, commandPreRequisites,
 } from '../utils';
@@ -74,7 +74,7 @@ const start = (commandSpecifiedDuration) => new Promise(async (resolve) => {
       leaveStart();
     } else if (option === 'finish') {
       // Complete mob
-      await finish();
+      await done();
       leaveStart();
     }
   };
@@ -101,7 +101,13 @@ const start = (commandSpecifiedDuration) => new Promise(async (resolve) => {
 
   mainInterval = setInterval(async () => {
     if (mobitConfig.current !== currentGitUser) {
-      spinner.text = '- Checking for changes';
+      spinner.text += ' - Checking for changes';
+      await git.fetch();
+      if (await git.getBranchExistsStatus().remote === false) {
+        spinner.warn('Mobbing has finished on this branch');
+        await prompt.any();
+        leaveStart();
+      }
       await git.pull();
     }
     mobitConfig = mobConfig.get();

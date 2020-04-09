@@ -9,7 +9,7 @@ import * as git from './git';
 
 export const getLocalConfig = () => new Conf({ projectName: path.basename(process.cwd()) });
 
-export const commandPreRequisites = async () => {
+export const commandPreRequisites = async ({ checkMobConfig = true } = {}) => {
   const errors = [];
   const config = getLocalConfig();
   const currentBranch = await git.currentBranch();
@@ -26,12 +26,14 @@ export const commandPreRequisites = async () => {
     } else if (currentBranch !== mobBranch) {
       errors.push('You are not on the mobbing branch');
     } else if (currentBranch === mobBranch) {
-      if (!mobConfig.has()) {
-        errors.push('No mob config present in branch');
-      } else {
-        const mobitConfig = await mobConfig.get();
-        if (!mobitConfig.members.includes(currentUser)) {
-          errors.push('You are not in this mob');
+      if (checkMobConfig) {
+        if (!mobConfig.has()) {
+          errors.push('No mob config present in branch');
+        } else {
+          const mobitConfig = await mobConfig.get();
+          if (!mobitConfig.members.includes(currentUser)) {
+            errors.push('You are not in this mob');
+          }
         }
       }
     }
