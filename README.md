@@ -5,13 +5,15 @@
 <br/><br/><br/>
 
 
-# Mobit (Alpha)
-**Note that this is an early release and is incomplete and prone to bugs. Please create an issue for any problems you encounter**
+# Mobit
 
 ## What is it 
-An interactive cli tool build in node to help the git handover when mobbing remotely. 
+An cross platform cli tool build in node to help the git handover when mobbing remotely.
 
 The app listens for changes in config that will determine who is driving or navigating, and the terminal will update when changes are detected.
+
+**Note that this is an early release may have bugs. Please create an issue for any problems you encounter**
+
 
 ## Installation
 `npm install -g mobit`
