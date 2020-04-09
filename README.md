@@ -8,7 +8,7 @@
 # Mobit
 
 ## What is it 
-An cross platform cli tool build in node to help the git handover when mobbing remotely.
+An cross platform cli tool built in node to help the git handover when mobbing remotely.
 
 The app listens for changes in config that will determine who is driving or navigating, and the terminal will update when changes are detected.
 
@@ -47,7 +47,6 @@ Alternatively clone the repo and `yarn link`
 - Refactor and fix test coverage 
 - More testing on all scenarios
 - Add zoom integration
-- Add auto publishing with semantic versioning
 
 ## How it works
 When you run the tool it will ask for information about the mob session (if not already provided). When you start mobbing you will be either in a driver or navigator mode. Note that you will need to keep the cli running to receive updates.
