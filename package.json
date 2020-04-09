@@ -15,6 +15,10 @@
     "type": "git",
     "url": "https://github.com/mcnally/mobit.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
+  },
   "homepage": "https://github.com/mcnally/mobit",
   "main": "cli/mobit.js",
   "scripts": {
