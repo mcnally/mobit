@@ -44,7 +44,7 @@
     "keypress": "^0.2.1",
     "node-notifier": "^6.0.0",
     "ora": "^4.0.3",
-    "simple-git": "^1.132.0",
+    "simple-git": "^3.3.0",
     "update-notifier": "^4.1.0"
   },
   "devDependencies": {
